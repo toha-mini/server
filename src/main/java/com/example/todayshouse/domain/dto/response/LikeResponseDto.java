@@ -5,14 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostResponseDto {
+public class LikeResponseDto {
 
-    private Long postId;
+    private boolean isLike;
 
-    private String content;
+    private int statusCode;
 
-    private String nickname;
-
-    private String titleImage;
+    private String statusMessage;
 
 }

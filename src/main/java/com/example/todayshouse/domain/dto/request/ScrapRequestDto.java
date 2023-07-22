@@ -6,14 +6,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostRequestDto {
-
-    private String content;
+public class ScrapRequestDto {
 
     @NotBlank
-    private String titleImage;
+    private Long postId;
 
-    private String subImage1;
-
-    private String subImage2;
 }
