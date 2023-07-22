@@ -1,4 +1,31 @@
 package com.example.todayshouse.controller;
 
+import com.example.todayshouse.domain.dto.request.SignupRequestDto;
+import com.example.todayshouse.service.MemberService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j(topic = "Signup")
+@RestController
+@RequestMapping("/api")
 public class MemberController {
+    private MemberService memberService;
+
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+    @PostMapping("/auth/sign-up")
+    public void signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+        memberService.signup(signupRequestDto);
+    }
+
+    @PostMapping("/auth/email")
+    public boolean checkValidate(@RequestBody SignupRequestDto signupRequestDto) {
+        return memberService.checkValidate(signupRequestDto);
+    }
 }
