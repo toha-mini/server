@@ -54,7 +54,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         MessageResponseDto responseDto = new MessageResponseDto(SUCCESS_MESSAGE, SUCCESS_CODE, SUCCESS_STATE_MESSAGE);
 
         String token = jwtUtil.createToken(email);
-        jwtUtil.writeResponseDtoToResponseBody(response, responseDto);
+
+        jwtUtil.addTokenToHeader(token, response);
+        writeResponseDtoToResponseBody(response, responseDto);
     }
 
     @Override
