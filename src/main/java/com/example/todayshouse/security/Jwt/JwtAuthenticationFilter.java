@@ -1,7 +1,7 @@
 package com.example.todayshouse.security.Jwt;
 
 import com.example.todayshouse.domain.dto.request.LoginRequestDto;
-import com.example.todayshouse.domain.dto.response.StatusResponseDto;
+import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("success login");
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         String email = principal.getUsername();
-        StatusResponseDto responseDto = new StatusResponseDto(SUCCESS_MESSAGE, SUCCESS_CODE, SUCCESS_STATE_MESSAGE);
+        MessageResponseDto responseDto = new MessageResponseDto(SUCCESS_MESSAGE, SUCCESS_CODE, SUCCESS_STATE_MESSAGE);
 
         String token = jwtUtil.createToken(email);
         jwtUtil.writeResponseDtoToResponseBody(response, responseDto);
@@ -62,11 +62,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("failed login");
 
         response.setStatus(401);
-        StatusResponseDto responseDto = new StatusResponseDto(FAIL_MESSAGE, FAIL_CODE, FAIL_STATE_MESSAGE);
+        MessageResponseDto responseDto = new MessageResponseDto(FAIL_MESSAGE, FAIL_CODE, FAIL_STATE_MESSAGE);
         writeResponseDtoToResponseBody(response, responseDto);
     }
 
-    private void writeResponseDtoToResponseBody(HttpServletResponse response, StatusResponseDto responseDto) throws IOException {
+    private void writeResponseDtoToResponseBody(HttpServletResponse response, MessageResponseDto responseDto) throws IOException {
         response.getWriter().write(objectMapper.writeValueAsString(responseDto));
     }
 
