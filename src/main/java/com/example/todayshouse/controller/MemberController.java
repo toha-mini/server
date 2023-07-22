@@ -1,9 +1,12 @@
 package com.example.todayshouse.controller;
 
 import com.example.todayshouse.domain.dto.request.SignupRequestDto;
+import com.example.todayshouse.domain.dto.response.EmailCheckResponseDto;
+import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +23,12 @@ public class MemberController {
     }
 
     @PostMapping("/auth/sign-up")
-    public void signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
-        memberService.signup(signupRequestDto);
+    public ResponseEntity<MessageResponseDto> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+        return memberService.signup(signupRequestDto);
     }
 
     @PostMapping("/auth/email")
-    public boolean checkValidate(@RequestBody SignupRequestDto signupRequestDto) {
+    public ResponseEntity<EmailCheckResponseDto> checkValidate(@RequestBody SignupRequestDto signupRequestDto) {
         return memberService.checkValidate(signupRequestDto);
     }
 }

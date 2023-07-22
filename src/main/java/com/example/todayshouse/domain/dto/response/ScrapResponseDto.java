@@ -5,14 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostResponseDto {
+public class ScrapResponseDto {
 
-    private Long postId;
+    private boolean isScrap;
 
-    private String content;
+    private int statusCode;
 
-    private String nickname;
-
-    private String titleImage;
+    private String statusMessage;
 
 }

@@ -30,9 +30,9 @@ public class Member extends TimeStamped {
     @Column(nullable = false)
     private String nickname;
 
-    public Member(SignupRequestDto requestDto) {
+    public Member(SignupRequestDto requestDto, String encodedPassword) {
         this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
+        this.password = encodedPassword;
         this.nickname = requestDto.getNickname();
     }
 }

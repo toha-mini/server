@@ -5,14 +5,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostResponseDto {
+public class EmailCheckResponseDto {
 
-    private Long postId;
+    private boolean checkValidate;
 
-    private String content;
+    private int statusCode;
 
-    private String nickname;
-
-    private String titleImage;
+    private String statusMessage;
 
 }
+
