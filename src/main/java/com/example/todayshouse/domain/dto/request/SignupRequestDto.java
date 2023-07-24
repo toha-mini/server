@@ -28,14 +28,14 @@ public class SignupRequestDto {
     @NotBlank
     private String nickname;
 
-    @NotBlank
-    boolean checkAge;
+    @Builder.Default
+    boolean checkAge = false;
 
-    @NotBlank
-    boolean checkTerms;
+    @Builder.Default
+    boolean checkTerms = false;
 
-    @NotBlank
-    boolean checkPersonalInfo;
+    @Builder.Default
+    boolean checkPersonalInfo = false;
 
     @Builder.Default
     boolean checkPersonalMarketing = false;

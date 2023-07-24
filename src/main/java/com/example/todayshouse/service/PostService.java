@@ -30,10 +30,10 @@ public class PostService {
 
         // s3에 이미지 파일 저장 및 url
         titleImgUrl = awsS3Util.uploadImgFile(titleImgMultiPartFile, "postImg");
-        if(!subImg1MultiPartFile.isEmpty()) {
+        if(subImg1MultiPartFile != null) {
             subImgurl1 = awsS3Util.uploadImgFile(subImg1MultiPartFile, "postImg");
         }
-        if(!subImg2MultiPartFile.isEmpty()) {
+        if(subImg2MultiPartFile != null) {
             subImgurl2 = awsS3Util.uploadImgFile(subImg2MultiPartFile, "postImg");
         }
 
