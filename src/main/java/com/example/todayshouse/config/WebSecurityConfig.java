@@ -31,6 +31,7 @@ public class WebSecurityConfig {
     private final ObjectMapper objectMapper;
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsServiceImpl userDetailsService;
+    private final CorsConfig corsConfig;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -67,11 +68,12 @@ public class WebSecurityConfig {
                                 .requestMatchers(GET, "/api/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
+    
     private static void stateless(SessionManagementConfigurer<HttpSecurity> httpSecuritySessionManagementConfigurer) {
         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }

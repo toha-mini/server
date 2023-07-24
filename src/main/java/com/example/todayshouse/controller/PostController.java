@@ -1,7 +1,9 @@
 package com.example.todayshouse.controller;
 
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
+import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
+import com.example.todayshouse.domain.dto.response.PostResponseDto;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
 import com.example.todayshouse.service.PostService;
 import jakarta.validation.Valid;
@@ -9,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j(topic = "PostController")
 @RestController
@@ -31,5 +33,15 @@ public class PostController {
                                                         @RequestPart(value = "subImage2", required = false) MultipartFile subImg2MultiPartFile
     ) {
         return postService.createPost(userDetails.getMember(), requestDto, titleImgMultiPartFile, subImg1MultiPartFile, subImg2MultiPartFile);
+    }
+
+    @GetMapping("/posts")
+    public List<PostResponseDto> getPostList (@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostList(Optional.ofNullable(userDetails));
+    }
+
+    @GetMapping("/posts/{postId}")
+    public DetailPostResponseDto getPost (@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPost(postId, Optional.ofNullable(userDetails));
     }
 }
