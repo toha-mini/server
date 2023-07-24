@@ -38,6 +38,6 @@ public class MemberService {
     }
 
     private boolean isDuplicatedEmail(String email) {
-        return memberRepository.findByEMAIL(email).isEmpty();
+        return memberRepository.findByEmail(email).isEmpty();
     }
 }
