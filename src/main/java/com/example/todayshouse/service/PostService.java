@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j(topic = "PostService")
 @Service
 @RequiredArgsConstructor
@@ -45,5 +47,9 @@ public class PostService {
 
         MessageResponseDto response = new MessageResponseDto("업로드 완료", 201, "CREATED");
         return ResponseEntity.status(201).body(response);
+    }
+
+    public List<PostResponseDto> getPostList() {
+        return postRepository.findAll().stream().map(PostResponseDto::new).toList();
     }
 }

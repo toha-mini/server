@@ -2,6 +2,7 @@ package com.example.todayshouse.controller;
 
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
+import com.example.todayshouse.domain.dto.response.PostResponseDto;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
 import com.example.todayshouse.service.PostService;
 import jakarta.validation.Valid;
@@ -9,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j(topic = "PostController")
 @RestController
@@ -32,4 +32,11 @@ public class PostController {
     ) {
         return postService.createPost(userDetails.getMember(), requestDto, titleImgMultiPartFile, subImg1MultiPartFile, subImg2MultiPartFile);
     }
+
+    @GetMapping("/posts")
+    public List<PostResponseDto> getPostList () {
+        return postService.getPostList();
+    }
+
+
 }
