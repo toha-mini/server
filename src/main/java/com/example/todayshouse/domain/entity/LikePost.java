@@ -23,4 +23,9 @@ public class LikePost extends TimeStamped {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public LikePost(Post post, Member member) {
+        this.post = post;
+        this.member = member;
+    }
 }
