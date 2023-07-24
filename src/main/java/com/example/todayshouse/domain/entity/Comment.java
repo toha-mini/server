@@ -1,5 +1,6 @@
 package com.example.todayshouse.domain.entity;
 
+import com.example.todayshouse.domain.dto.request.CommentRequestDto;
 import com.example.todayshouse.util.TimeStamped;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,10 @@ public class Comment extends TimeStamped {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public Comment(String nickname, String content, Post post) {
+        this.nickname = nickname;
+        this.content = content;
+        this.post = post;
+    }
 }

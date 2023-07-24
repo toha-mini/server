@@ -1,4 +1,7 @@
 package com.example.todayshouse.repository;
 
-public interface CommentRepository {
+import com.example.todayshouse.domain.entity.Comment;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 }
