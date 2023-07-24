@@ -25,13 +25,24 @@ public class Post extends TimeStamped {
     private String content;
 
     @Column(nullable = false)
-    private String titleImage;
+    private String titleImageUrl;
 
-    private String subImage1;
+    @Column(nullable = false)
+    private String subImageUrl1;
 
-    private String subImage2;
+    @Column(nullable = false)
+    private String subImageUrl2;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    public Post(Member member, String content, String titleImageUrl, String subImageUrl1, String subImageUrl2) {
+        this.nickname = member.getNickname();
+        this.content = content;
+        this.titleImageUrl = titleImageUrl;
+        this.subImageUrl1 = subImageUrl1;
+        this.subImageUrl2 = subImageUrl2;
+        this.member = member; // 연관관계
+    }
 }
