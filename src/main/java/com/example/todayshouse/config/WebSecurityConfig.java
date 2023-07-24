@@ -46,7 +46,7 @@ public class WebSecurityConfig {
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception{
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(objectMapper, jwtUtil);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        filter.setFilterProcessesUrl("/api/members/login");
+        filter.setFilterProcessesUrl("/api/auth/login");
         return filter;
     }
     @Bean
