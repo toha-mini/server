@@ -15,8 +15,8 @@ import static lombok.AccessLevel.PROTECTED;
 public class Post extends TimeStamped {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long postId;
+    @Column(name = "post_id",updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    private Long id;
 
     @Column(nullable = false)
     private String nickname;
