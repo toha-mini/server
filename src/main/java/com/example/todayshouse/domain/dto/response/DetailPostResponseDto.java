@@ -1,5 +1,6 @@
 package com.example.todayshouse.domain.dto.response;
 
+import com.example.todayshouse.domain.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,12 +22,24 @@ public class DetailPostResponseDto {
 
     private LocalDateTime modifiedAt;
 
-    private int likeCount;
+    private Long likeCount;
 
-    private int scrapCount;
+    private Long scrapCount;
 
-    private boolean isLike;
+    private Boolean isLike;
 
-    private boolean isScrap;
+    private Boolean isScrap;
 
+    public DetailPostResponseDto(Post post, Long likeCount, Long scrapCount, boolean isLike, boolean isScrap) {
+        this.content = post.getContent();
+        this.titleImage = post.getTitleImageUrl();
+        this.subImage1 = post.getSubImageUrl1();
+        this.subImage2 = post.getSubImageUrl2();
+        this.createdAt = post.getCreatedAt();
+        this.modifiedAt = post.getModifiedAt();
+        this.likeCount = likeCount;
+        this.scrapCount = scrapCount;
+        this.isLike = isLike;
+        this.isScrap = isScrap;
+    }
 }

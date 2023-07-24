@@ -1,6 +1,7 @@
 package com.example.todayshouse.controller;
 
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
+import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.domain.dto.response.PostResponseDto;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j(topic = "PostController")
 @RestController
@@ -34,9 +36,12 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponseDto> getPostList () {
-        return postService.getPostList();
+    public List<PostResponseDto> getPostList (@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPostList(Optional.ofNullable(userDetails));
     }
 
-
+    @GetMapping("/posts/{postId}")
+    public DetailPostResponseDto getPost (@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.getPost(postId, Optional.ofNullable(userDetails));
+    }
 }

@@ -18,8 +18,8 @@ import static lombok.AccessLevel.PROTECTED;
 public class Member extends TimeStamped {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long memberId;
+    @Column(name = "member_id", updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;

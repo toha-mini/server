@@ -16,11 +16,15 @@ public class PostResponseDto {
 
     private String titleImage;
 
-    public PostResponseDto(Post post) {
-        this.postId = post.getPostId();
+    private Boolean isScrap;
+
+
+    public PostResponseDto(Post post, Boolean isScrap) {
+        this.postId = post.getId();
         this.content = post.getContent();
         this.nickname = post.getNickname();
         this.titleImage = post.getTitleImageUrl();
+        this.isScrap = isScrap;
     }
 
 }
