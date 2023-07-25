@@ -1,13 +1,13 @@
 package com.example.todayshouse.domain.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class LikeRequestDto {
 
-    @NotBlank
+    @NotNull
     private Long postId;
 }

@@ -28,7 +28,7 @@ public class LikePostService {
         Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() ->
                 new IllegalArgumentException("게시글을 찾을수 없습니다."));
 
-        Optional<LikePost> likePost =likesRepository.findByPostPostIdAndMemberMemberId(requestDto.getPostId(), memberId);
+        Optional<LikePost> likePost =likesRepository.findByPostIdAndMemberId(requestDto.getPostId(), memberId);
 
         //게시글이 좋아요 되어 있는 경우
         if (likePost.isPresent()) {
