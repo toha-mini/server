@@ -5,6 +5,7 @@ import com.example.todayshouse.domain.dto.response.EmailCheckResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.service.MemberService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,13 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j(topic = "Signup")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class MemberController {
-    private MemberService memberService;
-
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
-    }
+    private final MemberService memberService;
 
     @PostMapping("/auth/sign-up")
     public ResponseEntity<MessageResponseDto> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
