@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
+import static org.springframework.http.MediaType.*;
+
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -57,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         jwtUtil.addTokenToHeader(token, response);
         writeResponseDtoToResponseBody(response, responseDto);
-        response.setContentType("application/json");
+        response.setContentType(APPLICATION_JSON_VALUE);
     }
 
     @Override
