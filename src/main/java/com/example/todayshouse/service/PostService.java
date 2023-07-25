@@ -1,5 +1,6 @@
 package com.example.todayshouse.service;
 
+import com.example.todayshouse.domain.StatusEnum;
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
 import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
 import com.example.todayshouse.domain.dto.response.LikePostResponseDto;
@@ -13,7 +14,6 @@ import com.example.todayshouse.repository.QueryRepository;
 import com.example.todayshouse.repository.ScrapRepository;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
 import com.example.todayshouse.util.AwsS3Util;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.todayshouse.domain.StatusEnum.*;
+
 @Slf4j(topic = "PostService")
 @Service
 @RequiredArgsConstructor
 public class PostService {
+
+    private final String DIR_NAME = "postImg";
 
     private final PostRepository postRepository;
     private final QueryRepository queryRepository;
@@ -42,12 +46,12 @@ public class PostService {
         String subImgurl2 = "";
 
         // s3에 이미지 파일 저장 및 url
-        titleImgUrl = awsS3Util.uploadImgFile(titleImgMultiPartFile, "postImg");
-        if(subImg1MultiPartFile != null) {
-            subImgurl1 = awsS3Util.uploadImgFile(subImg1MultiPartFile, "postImg");
+        titleImgUrl = awsS3Util.uploadImgFile(titleImgMultiPartFile, DIR_NAME);
+        if (subImg1MultiPartFile != null) {
+            subImgurl1 = awsS3Util.uploadImgFile(subImg1MultiPartFile, DIR_NAME);
         }
-        if(subImg2MultiPartFile != null) {
-            subImgurl2 = awsS3Util.uploadImgFile(subImg2MultiPartFile, "postImg");
+        if (subImg2MultiPartFile != null) {
+            subImgurl2 = awsS3Util.uploadImgFile(subImg2MultiPartFile, DIR_NAME);
         }
 
         // Entity 객체 생성
@@ -56,58 +60,54 @@ public class PostService {
         // DB 저장
         postRepository.save(post);
 
-        MessageResponseDto response = new MessageResponseDto("업로드 완료", 201, "CREATED");
-        return ResponseEntity.status(201).body(response);
+        MessageResponseDto response = new MessageResponseDto("업로드 완료", CREATED.getCode(), CREATED.getMessage());
+        return ResponseEntity.status(CREATED.getCode()).body(response);
     }
 
-    public List<PostResponseDto> getPostList(Optional<UserDetailsImpl> userDetails) {
+    public ResponseEntity<List<PostResponseDto>> getPostList(Optional<UserDetailsImpl> userDetails) {
         List<Post> postList = postRepository.findAll();
-        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
 
-        boolean isScrap = false;
+        List<PostResponseDto> postResponseDtoList = postList.stream()
+                .map(post -> new PostResponseDto(post, isScrap(userDetails, post)))
+                .toList();
 
-        for (Post post : postList) {
-            if (userDetails.isPresent()) {
-                isScrap = checkPostScrap(post, userDetails.get().getMember());
-            }
-            postResponseDtoList.add(new PostResponseDto(post, isScrap));
-        }
-
-        return postResponseDtoList;
+        return ResponseEntity.status(OK.getCode()).body(postResponseDtoList);
     }
 
-    public DetailPostResponseDto getPost(Long postId, Optional<UserDetailsImpl> userDetails) {
+    private boolean isScrap(Optional<UserDetailsImpl> userDetails, Post post) {
+        return userDetails.isPresent() && checkPostScrap(post, userDetails.get().getMember());
+    }
+
+    public ResponseEntity<DetailPostResponseDto> getPost(Long postId, Optional<UserDetailsImpl> userDetails) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재 하지 않습니다."));
 
         Long likeCount = queryRepository.findLikeCount(postId);
         Long scrapCount = queryRepository.findScrapCount(postId);
+        boolean isScrap = userDetails.isPresent() && checkPostScrap(post, userDetails.get().getMember());
+        boolean isLike = userDetails.isPresent() && checkPostLike(post, userDetails.get().getMember());
 
-        boolean isScrap = false;
-        boolean isLike = false;
+        DetailPostResponseDto detailPostResponseDto = new DetailPostResponseDto(post, likeCount, scrapCount, isLike, isScrap);
 
-        if (userDetails.isPresent()) {
-            isScrap = checkPostScrap(post, userDetails.get().getMember());
-            isLike = checkPostLike(post, userDetails.get().getMember());
-        }
-
-        return new DetailPostResponseDto(post, likeCount, scrapCount, isLike, isScrap);
+        return ResponseEntity.status(OK.getCode()).body(detailPostResponseDto);
     }
 
-    public boolean checkPostLike(Post post, Member member) {
-        return likesRepository.existsByPostIdAndMemberId(post.getId(), member.getId());
+    private boolean checkPostLike(Post post, Member member) {
+            return likesRepository.existsByPostIdAndMemberId(post.getId(), member.getId());
     }
 
-    public boolean checkPostScrap(Post post, Member member) {
-        return scrapRepository.existsByPostIdAndMemberId(post.getId(), member.getId());
+    private boolean checkPostScrap(Post post, Member member) {
+            return scrapRepository.existsByPostIdAndMemberId(post.getId(), member.getId());
     }
 
-    public List<LikePostResponseDto> getPostsByLike() {
-        return queryRepository.findPostsSortedByLikeCount().stream().map(
-                (result) -> {
+    public ResponseEntity<List<LikePostResponseDto>> getPostsByLike() {
+        List<LikePostResponseDto> likePostResponseDtoList = queryRepository.findPostsSortedByLikeCount().stream()
+                .map(result -> {
                     Long postId = result.getId();
                     Long likeCount = queryRepository.findLikeCount(postId);
                     return new LikePostResponseDto(result, likeCount);
-                }
-        ).toList();
+                })
+                .toList();
+
+        return ResponseEntity.status(OK.getCode()).body(likePostResponseDtoList);
     }
 }

@@ -1,12 +1,13 @@
 package com.example.todayshouse.domain.dto.request;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class PostRequestDto {
-    @NotNull
+
+    @Builder.Default
     private String content = "";
 }

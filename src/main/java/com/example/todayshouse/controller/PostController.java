@@ -5,6 +5,7 @@ import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
 import com.example.todayshouse.domain.dto.response.LikePostResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.domain.dto.response.PostResponseDto;
+import com.example.todayshouse.domain.entity.Member;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
 import com.example.todayshouse.service.PostService;
 import jakarta.validation.Valid;
@@ -29,25 +30,25 @@ public class PostController {
     @PostMapping("/posts")
     public ResponseEntity<MessageResponseDto> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                          @RequestPart(value = "content") @Valid PostRequestDto requestDto,
-                                                        @RequestPart(value = "titleImage") MultipartFile titleImgMultiPartFile,
-                                                        @RequestPart(value = "subImage1", required = false) MultipartFile subImg1MultiPartFile,
-                                                        @RequestPart(value = "subImage2", required = false) MultipartFile subImg2MultiPartFile
+                                                         @RequestPart(value = "titleImage") MultipartFile titleImgMultiPartFile,
+                                                         @RequestPart(value = "subImage1", required = false) MultipartFile subImg1MultiPartFile,
+                                                         @RequestPart(value = "subImage2", required = false) MultipartFile subImg2MultiPartFile
     ) {
         return postService.createPost(userDetails.getMember(), requestDto, titleImgMultiPartFile, subImg1MultiPartFile, subImg2MultiPartFile);
     }
 
     @GetMapping("/posts")
-    public List<PostResponseDto> getPostList (@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<List<PostResponseDto>> getPostList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPostList(Optional.ofNullable(userDetails));
     }
 
     @GetMapping("/posts/{postId}")
-    public DetailPostResponseDto getPost (@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<DetailPostResponseDto> getPost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPost(postId, Optional.ofNullable(userDetails));
     }
 
     @GetMapping("/posts/like")
-    public List<LikePostResponseDto> getPostsByLike() {
+    public ResponseEntity<List<LikePostResponseDto>> getPostsByLike() {
         return postService.getPostsByLike();
     }
 }
