@@ -1,6 +1,7 @@
 package com.example.todayshouse.domain.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommentRequestDto {
 
-    @NotBlank
+    @NotNull
     private Long postId;
 
     @NotBlank
