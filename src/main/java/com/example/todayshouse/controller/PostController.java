@@ -2,6 +2,7 @@ package com.example.todayshouse.controller;
 
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
 import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
+import com.example.todayshouse.domain.dto.response.LikePostResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.domain.dto.response.PostResponseDto;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
@@ -27,7 +28,7 @@ public class PostController {
 
     @PostMapping("/posts")
     public ResponseEntity<MessageResponseDto> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                        @RequestPart("content") @Valid PostRequestDto requestDto,
+                                                         @RequestPart(value = "content") @Valid PostRequestDto requestDto,
                                                         @RequestPart(value = "titleImage") MultipartFile titleImgMultiPartFile,
                                                         @RequestPart(value = "subImage1", required = false) MultipartFile subImg1MultiPartFile,
                                                         @RequestPart(value = "subImage2", required = false) MultipartFile subImg2MultiPartFile
@@ -43,5 +44,10 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public DetailPostResponseDto getPost (@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return postService.getPost(postId, Optional.ofNullable(userDetails));
+    }
+
+    @GetMapping("/posts/like")
+    public List<LikePostResponseDto> getPostsByLike() {
+        return postService.getPostsByLike();
     }
 }

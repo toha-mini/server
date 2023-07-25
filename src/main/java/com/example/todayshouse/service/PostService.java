@@ -2,6 +2,7 @@ package com.example.todayshouse.service;
 
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
 import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
+import com.example.todayshouse.domain.dto.response.LikePostResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.domain.dto.response.PostResponseDto;
 import com.example.todayshouse.domain.entity.Member;
@@ -34,7 +35,7 @@ public class PostService {
     private final LikesRepository likesRepository;
     private final AwsS3Util awsS3Util;
 
-    public ResponseEntity<MessageResponseDto> createPost(Member member, @Valid PostRequestDto requestDto, MultipartFile titleImgMultiPartFile, MultipartFile subImg1MultiPartFile, MultipartFile subImg2MultiPartFile) {
+    public ResponseEntity<MessageResponseDto> createPost(Member member, PostRequestDto requestDto, MultipartFile titleImgMultiPartFile, MultipartFile subImg1MultiPartFile, MultipartFile subImg2MultiPartFile) {
         //urls
         String titleImgUrl;
         String subImgurl1 = "";
@@ -98,5 +99,15 @@ public class PostService {
 
     public boolean checkPostScrap(Post post, Member member) {
         return scrapRepository.existsByPostIdAndMemberId(post.getId(), member.getId());
+    }
+
+    public List<LikePostResponseDto> getPostsByLike() {
+        return queryRepository.findPostsSortedByLikeCount().stream().map(
+                (result) -> {
+                    Long postId = result.getId();
+                    Long likeCount = queryRepository.findLikeCount(postId);
+                    return new LikePostResponseDto(result, likeCount);
+                }
+        ).toList();
     }
 }
