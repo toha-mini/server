@@ -30,7 +30,7 @@ public class ScrapPostService {
                 new IllegalArgumentException("해당 게시글이 없습니다.")
         );
 
-        Optional<ScrapPost> scrapPost = scrapRepository.findByPostPostIdAndMemberMemberId(postId, memberId);
+        Optional<ScrapPost> scrapPost = scrapRepository.findByPostIdAndMemberId(postId, memberId);
 
         // 스크랩이 눌러져 있는 경우
         if (scrapPost.isPresent()) {
