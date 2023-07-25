@@ -11,18 +11,6 @@ import java.util.List;
 public class CommentListResponseDto {
 
     private List<CommentResponseDto> commentList;
+
     private int commentSize;
-
-    @Getter
-    @AllArgsConstructor
-    public class CommentResponseDto {
-        private String nickname;
-
-        private String content;
-
-        private LocalDateTime createdAt;
-
-        private LocalDateTime modifiedAt;
-    }
-
 }
