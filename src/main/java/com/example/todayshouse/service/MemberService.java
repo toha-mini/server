@@ -1,5 +1,6 @@
 package com.example.todayshouse.service;
 
+import com.example.todayshouse.domain.StatusEnum;
 import com.example.todayshouse.domain.dto.request.SignupRequestDto;
 import com.example.todayshouse.domain.dto.response.EmailCheckResponseDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
@@ -12,9 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.example.todayshouse.domain.StatusEnum.*;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final SignCheckListRepository signCheckListRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,14 +31,15 @@ public class MemberService {
         memberRepository.save(member);
         signCheckListRepository.save(signCheckList);
 
-        MessageResponseDto response = new MessageResponseDto("회원가입 완료", 200, "OK");
-        return ResponseEntity.status(200).body(response);
+        MessageResponseDto response = new MessageResponseDto("회원가입 완료", OK.getCode(), OK.getMessage());
+        return ResponseEntity.status(OK.getCode()).body(response);
     }
 
     public ResponseEntity<EmailCheckResponseDto> checkValidate(SignupRequestDto signupRequestDto) {
         String email = signupRequestDto.getEmail();
-        EmailCheckResponseDto response = new EmailCheckResponseDto(isDuplicatedEmail(email), 200, "OK");
-        return ResponseEntity.status(200).body(response);
+        boolean validateDuplicateEmail = isDuplicatedEmail(email);
+        EmailCheckResponseDto response = new EmailCheckResponseDto(validateDuplicateEmail, OK.getCode(), OK.getMessage());
+        return ResponseEntity.status(OK.getCode()).body(response);
     }
 
     private boolean isDuplicatedEmail(String email) {

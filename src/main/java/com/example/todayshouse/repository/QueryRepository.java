@@ -15,7 +15,7 @@ public class QueryRepository {
     private final EntityManager entityManager;
 
     public Long findLikeCount(Long postId) {
-        String query = "select count(l) from LikePost l left join l.post p where p.id = :postId";
+        String query = "select count(l) from LikePost l where l.post.id = :postId";
 
         try {
             return (Long) entityManager.createQuery(query).setParameter("postId", postId).getSingleResult();
@@ -26,7 +26,7 @@ public class QueryRepository {
     }
 
     public Long findScrapCount(Long postId) {
-        String query = "select count(l) from ScrapPost l left join l.post p where p.id = :postId";
+        String query = "select count(l) from ScrapPost l where l.post.id = :postId";
 
         try {
             return (Long) entityManager.createQuery(query).setParameter("postId", postId).getSingleResult();

@@ -35,14 +35,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        log.info("try login");
-
         try {
             LoginRequestDto loginRequestDto = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
             return getAuthenticationManager().authenticate(authenticationToken);
         } catch (IOException e) {
-            log.info("error={}", e.getMessage());
             throw new RuntimeException("Authentication failed: " + e.getMessage(), e);
         }
 
@@ -50,25 +47,27 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        log.info("success login");
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         String email = principal.getUsername();
         MessageResponseDto responseDto = new MessageResponseDto(SUCCESS_MESSAGE, SUCCESS_CODE, SUCCESS_STATE_MESSAGE);
 
         String token = jwtUtil.createToken(email);
 
+        setResponseType(response);
         jwtUtil.addTokenToHeader(token, response);
         writeResponseDtoToResponseBody(response, responseDto);
-        response.setContentType(APPLICATION_JSON_VALUE);
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("failed login");
-
-        response.setStatus(401);
+        response.setStatus(FAIL_CODE);
+        setResponseType(response);
         MessageResponseDto responseDto = new MessageResponseDto(FAIL_MESSAGE, FAIL_CODE, FAIL_STATE_MESSAGE);
         writeResponseDtoToResponseBody(response, responseDto);
+    }
+
+    private static void setResponseType(HttpServletResponse response) {
+        response.setContentType(APPLICATION_JSON_VALUE);
     }
 
     private void writeResponseDtoToResponseBody(HttpServletResponse response, MessageResponseDto responseDto) throws IOException {
