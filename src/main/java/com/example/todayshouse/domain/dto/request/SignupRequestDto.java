@@ -1,9 +1,6 @@
 package com.example.todayshouse.domain.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import static lombok.AccessLevel.*;
@@ -28,18 +25,19 @@ public class SignupRequestDto {
     @NotBlank
     private String nickname;
 
-    @Builder.Default
-    boolean checkAge = false;
+    @NotNull
+    Boolean checkAge;
+
+    @NotNull
+    Boolean checkTerms;
+
+    @NotNull
+    Boolean checkPersonalInfo;
+
 
     @Builder.Default
-    boolean checkTerms = false;
+    Boolean checkPersonalMarketing = false;
 
     @Builder.Default
-    boolean checkPersonalInfo = false;
-
-    @Builder.Default
-    boolean checkPersonalMarketing = false;
-
-    @Builder.Default
-    boolean checkPushNotification = false;
+    Boolean checkPushNotification = false;
 }

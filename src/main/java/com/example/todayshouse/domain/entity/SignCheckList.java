@@ -20,30 +20,30 @@ public class SignCheckList {
     private Long checkListId;
 
     @Column(nullable = false)
-    private boolean checkAge;
+    private Boolean checkAge;
 
     @Column(nullable = false)
-    private boolean checkTerms;
+    private Boolean checkTerms;
 
     @Column(nullable = false)
-    private boolean checkPersonalInfo;
+    private Boolean checkPersonalInfo;
 
     @Column(nullable = false)
-    private boolean checkPersonalMarketing;
+    private Boolean checkPersonalMarketing;
 
     @Column(nullable = false)
-    private boolean checkPushNotification;
+    private Boolean checkPushNotification;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     public SignCheckList(SignupRequestDto requestDto, Member member) {
-        this.checkAge = requestDto.isCheckAge();
-        this.checkTerms = requestDto.isCheckTerms();
-        this.checkPersonalInfo = requestDto.isCheckPersonalInfo();
-        this.checkPersonalMarketing = requestDto.isCheckPersonalMarketing();
-        this.checkPushNotification = requestDto.isCheckPushNotification();
+        this.checkAge = requestDto.getCheckAge();
+        this.checkTerms = requestDto.getCheckTerms();
+        this.checkPersonalInfo = requestDto.getCheckPersonalInfo();
+        this.checkPersonalMarketing = requestDto.getCheckPersonalMarketing();
+        this.checkPushNotification = requestDto.getCheckPushNotification();
         this.member = member;
     }
 }
