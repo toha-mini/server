@@ -1,5 +1,6 @@
 package com.example.todayshouse.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.todayshouse.domain.StatusEnum;
 import com.example.todayshouse.domain.dto.response.ScrapResponseDto;
 import com.example.todayshouse.domain.entity.Member;
@@ -26,8 +27,8 @@ public class ScrapPostService {
 
     // 게시글 스크랩
     public ResponseEntity<ScrapResponseDto> scrapPost(Long memberId, Long postId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException("없는 사용자입니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("없는 포스트 입니다."));
 
         Optional<ScrapPost> scrapPost = scrapRepository.findByPostIdAndMemberId(postId, memberId);
 

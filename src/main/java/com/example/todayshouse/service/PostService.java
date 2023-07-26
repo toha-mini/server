@@ -1,5 +1,6 @@
 package com.example.todayshouse.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.todayshouse.domain.StatusEnum;
 import com.example.todayshouse.domain.dto.request.PostRequestDto;
 import com.example.todayshouse.domain.dto.response.DetailPostResponseDto;
@@ -79,7 +80,7 @@ public class PostService {
     }
 
     public ResponseEntity<DetailPostResponseDto> getPost(Long postId, Optional<UserDetailsImpl> userDetails) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재 하지 않습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("없는 포스트입니다."));
 
         Long likeCount = queryRepository.findLikeCount(postId);
         Long scrapCount = queryRepository.findScrapCount(postId);

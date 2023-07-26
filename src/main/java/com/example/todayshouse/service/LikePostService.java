@@ -1,5 +1,6 @@
 package com.example.todayshouse.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.todayshouse.domain.dto.request.LikeRequestDto;
 import com.example.todayshouse.domain.dto.response.LikeResponseDto;
 import com.example.todayshouse.domain.entity.LikePost;
@@ -25,8 +26,8 @@ public class LikePostService {
 
     // 게시글 좋아요
     public ResponseEntity<LikeResponseDto> likePost(LikeRequestDto requestDto, Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을수 없습니다."));
-        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("게시글을 찾을수 없습니다."));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException("없는 사용자입니다."));
+        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new NotFoundException("없는 포스트입니다."));
 
         Optional<LikePost> likePost = likesRepository.findByPostIdAndMemberId(requestDto.getPostId(), memberId);
 

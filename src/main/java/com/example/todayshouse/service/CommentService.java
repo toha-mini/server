@@ -1,6 +1,6 @@
 package com.example.todayshouse.service;
 
-import com.example.todayshouse.domain.StatusEnum;
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.example.todayshouse.domain.dto.request.CommentRequestDto;
 import com.example.todayshouse.domain.dto.response.CommentListResponseDto;
 import com.example.todayshouse.domain.dto.response.CommentResponseDto;
@@ -28,7 +28,7 @@ public class CommentService {
     private final PostRepository postRepository;
 
     public ResponseEntity<MessageResponseDto> createComment(CommentRequestDto requestDto, Member member) {
-        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+        Post post = postRepository.findById(requestDto.getPostId()).orElseThrow(() -> new NotFoundException("없는 포스트입니다."));
         Comment comment = new Comment(requestDto.getContent(), member.getNickname(), post, member);
 
         commentRepository.save(comment);

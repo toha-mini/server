@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,7 +24,11 @@ public class AwsS3Util {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Value("${cloud.aws.s3.maxsize}")
+    private Long maxsize;
+
     public String uploadImgFile(MultipartFile multipartFile, String dirName) {
+        validateFileSize(multipartFile);
 
         String imgFileName = dirName + "/" + UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
         ObjectMetadata objectMeta = new ObjectMetadata();
@@ -37,6 +43,12 @@ public class AwsS3Util {
 
         URL url = amazonS3.getUrl(bucket, imgFileName);
         return url.toString();
+    }
+
+    private void validateFileSize(MultipartFile multipartFile) {
+        if(multipartFile.getSize() > maxsize) {
+            throw new MultipartException("용량 초과입니다.(최대 3MB까지 가능합니다.)");
+        }
     }
 
 }

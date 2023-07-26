@@ -8,7 +8,11 @@ import lombok.Getter;
 public enum StatusEnum {
 
     OK(200, "OK"),
-    CREATED(201, "CREATED");
+    CREATED(201, "CREATED"),
+
+    PARAMETER_WRONG(400, "PARAMETER_WRONG"),
+    UNAUTHORIZED(401, "UNAUTHORIZED"),
+    NOT_FOUND(404, "NOT_FOUND");
 
     private final int code;
     private final String message;

@@ -24,6 +24,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<MessageResponseDto> signup(SignupRequestDto signupRequestDto) {
+        validationCheckList(signupRequestDto);
+
         String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
         Member member = new Member(signupRequestDto, encodedPassword); // 인코딩된 패스워드 필요
         SignCheckList signCheckList = new SignCheckList(signupRequestDto, member);
@@ -33,6 +35,16 @@ public class MemberService {
 
         MessageResponseDto response = new MessageResponseDto("회원가입 완료", OK.getCode(), OK.getMessage());
         return ResponseEntity.status(OK.getCode()).body(response);
+    }
+
+    private static void validationCheckList(SignupRequestDto signupRequestDto) {
+        if (isValidCheckList(signupRequestDto)) {
+            throw new IllegalArgumentException("필수 항목을 확인해주세요.");
+        }
+    }
+
+    private static boolean isValidCheckList(SignupRequestDto signupRequestDto) {
+        return signupRequestDto.getCheckAge() == false || signupRequestDto.getCheckTerms() == false || signupRequestDto.getCheckPersonalInfo() == false;
     }
 
     public ResponseEntity<EmailCheckResponseDto> checkValidate(SignupRequestDto signupRequestDto) {

@@ -1,5 +1,6 @@
 package com.example.todayshouse.security.Jwt;
 
+import com.example.todayshouse.domain.StatusEnum;
 import com.example.todayshouse.domain.dto.request.LoginRequestDto;
 import com.example.todayshouse.domain.dto.response.MessageResponseDto;
 import com.example.todayshouse.security.userdetails.UserDetailsImpl;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 
+import static com.example.todayshouse.domain.StatusEnum.*;
 import static org.springframework.http.MediaType.*;
 
 @Slf4j
@@ -24,11 +26,7 @@ import static org.springframework.http.MediaType.*;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final String SUCCESS_MESSAGE = "로그인 완료.";
-    private final Integer SUCCESS_CODE = 200;
-    private final String SUCCESS_STATE_MESSAGE = "OK";
-    private final String FAIL_MESSAGE = "로그인 정보가 일치하지 않습니다.";
-    private final Integer FAIL_CODE = 401;
-    private final String FAIL_STATE_MESSAGE = "Unauthorized";
+    private final String FAIL_MESSAGE = "입력정보를 확인해주세요.";
 
     private final ObjectMapper objectMapper;
     private final JwtUtil jwtUtil;
@@ -49,7 +47,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         String email = principal.getUsername();
-        MessageResponseDto responseDto = new MessageResponseDto(SUCCESS_MESSAGE, SUCCESS_CODE, SUCCESS_STATE_MESSAGE);
+        MessageResponseDto responseDto = new MessageResponseDto(SUCCESS_MESSAGE, OK.getCode(), OK.getMessage());
 
         String token = jwtUtil.createToken(email);
 
@@ -60,9 +58,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(FAIL_CODE);
+        response.setStatus(UNAUTHORIZED.getCode());
         setResponseType(response);
-        MessageResponseDto responseDto = new MessageResponseDto(FAIL_MESSAGE, FAIL_CODE, FAIL_STATE_MESSAGE);
+        MessageResponseDto responseDto = new MessageResponseDto(FAIL_MESSAGE, UNAUTHORIZED.getCode(), UNAUTHORIZED.getMessage());
         writeResponseDtoToResponseBody(response, responseDto);
     }
 
