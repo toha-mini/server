@@ -4,6 +4,7 @@ import com.example.todayshouse.domain.dto.request.PostRequestDto;
 import com.example.todayshouse.domain.dto.request.SignupRequestDto;
 import com.example.todayshouse.domain.entity.Member;
 import com.example.todayshouse.domain.entity.Post;
+import com.example.todayshouse.repository.LikesRepository;
 import com.example.todayshouse.repository.MemberRepository;
 import com.example.todayshouse.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +18,12 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -32,6 +37,9 @@ class PostServiceTest {
 
     @Autowired
     PostService postService;
+
+    @Autowired
+    LikesRepository likesRepository;
 
     private Member defaultMember;
 
@@ -69,6 +77,15 @@ class PostServiceTest {
         //then
         assertThat(findPosts.size()).isEqualTo(1);
         assertThat(findPosts.get(0).getMember()).isEqualTo(defaultMember);
+    }
+
+    @Test
+    @DisplayName("용량 초과 이미지 저장 실패 테스트")
+    void overSizeImageCreateFailTest() {
+        //given, when, then
+        assertThatThrownBy(() -> createPost(4000000))
+                .isInstanceOf(MultipartException.class)
+                .hasMessage("용량 초과입니다.(최대 3MB까지 가능합니다.)");
     }
 
     @Test
